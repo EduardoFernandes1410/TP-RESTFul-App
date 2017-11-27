@@ -4,20 +4,28 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular'
 import { MyApp } from './app.component'
 
 import { AboutPage } from '../pages/about/about'
-import { ContactPage } from '../pages/contact/contact'
+import { ListagemPage } from '../pages/listagem/listagem'
 import { HomePage } from '../pages/home/home'
 import { TabsPage } from '../pages/tabs/tabs'
 import { CriarBanheiroPage } from '../pages/criar-banheiro/criar-banheiro'
+import { BanheiroInfoPage } from '../pages/banheiro-info/banheiro-info'
+import { TestePage } from '../pages/teste/teste'
 import { StatusBar } from '@ionic-native/status-bar'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { Geolocation } from '@ionic-native/geolocation'
 import { GoogleMaps } from '@ionic-native/google-maps'
 import { AdMobFree } from '@ionic-native/admob-free'
+import { HTTP } from '@ionic-native/http'
 import { BanheirosProvider } from '../providers/banheiros/banheiros'
 import { MapsProvider } from '../providers/maps/maps'
+import { UserProvider } from '../providers/user/user'
+import { IonicStorageModule } from '@ionic/storage'
+import { RatesProvider } from '../providers/rates/rates'
 
 import { AngularFireModule } from 'angularfire2'
 import { AngularFireDatabaseModule, AngularFireDatabase } from 'angularfire2/database'
+
+import { StarRatingModule } from 'angular-star-rating'
 
 export const firebaseConfig = {
   apiKey: "AIzaSyAMpPTtksWD6aqg0kI2MOswL6q5MiKk1a8",
@@ -32,25 +40,31 @@ export const firebaseConfig = {
   declarations: [
     MyApp,
     AboutPage,
-    ContactPage,
+    ListagemPage,
     HomePage,
     TabsPage,
-    CriarBanheiroPage
+    CriarBanheiroPage,
+    BanheiroInfoPage,
+    TestePage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseConfig),
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    StarRatingModule.forRoot(),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     AboutPage,
-    ContactPage,
+    ListagemPage,
     HomePage,
     TabsPage,
-    CriarBanheiroPage
+    CriarBanheiroPage,
+    BanheiroInfoPage,
+    TestePage
   ],
   providers: [
     StatusBar,
@@ -58,10 +72,14 @@ export const firebaseConfig = {
     Geolocation,
     GoogleMaps,
     AdMobFree,
+    HTTP,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     BanheirosProvider,
     MapsProvider,
-    AngularFireDatabase
+    AngularFireDatabase,
+    UserProvider,
+    RatesProvider,
+    StatusBar
   ]
 })
 export class AppModule {}

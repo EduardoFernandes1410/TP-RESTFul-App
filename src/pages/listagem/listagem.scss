@@ -1,0 +1,18 @@
+page-listagem {	
+	ion-card {
+		margin-bottom: 30px !important;
+		
+		.endereco, .comentario {
+			span {
+				margin-left: 5px;
+			}
+		}
+		
+		.info {
+			margin-top: 15px;
+		}
+		
+		.estrelas {
+		}
+	}
+}

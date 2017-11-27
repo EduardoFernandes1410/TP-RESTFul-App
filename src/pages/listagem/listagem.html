@@ -1,0 +1,56 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Lista de Banheiros</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-refresher (ionRefresh)="doRefresh($event)">
+		<ion-refresher-content
+			pullingIcon="arrow-dropdown"
+			pullingText="Puxe para recarregar"
+			refreshingSpinner="circles"
+			refreshingText="Recarregando...">
+		</ion-refresher-content>
+	</ion-refresher>
+
+	<ion-card *ngFor="let banheiro of (banheiros | async); let i = index;">	
+	  <ion-card-content>
+		<ion-card-title>
+		   	{{banheiro.nome}}
+	  	</ion-card-title>
+	
+		<star-rating-comp class="estrelas" [readOnly]="true" [showHalfStars]="true" [starType]="'svg'" [size]="'medium'" [rating]="notas[i]"></star-rating-comp>
+	   	
+	   	<p class="endereco info">
+	   		<ion-icon name="pin"></ion-icon>
+	   		<span>{{banheiro.endereco}}</span>
+	   	</p>
+	   	
+	   	<p class="comentario info">
+	   		<ion-icon name="chatbubbles"></ion-icon>
+	   		<span>{{banheiro.comentario}}</span>
+	   	</p>
+	   	
+	   	<ion-row padding-top>
+	   		<ion-col text-left no-padding>
+				<button ion-button no-padding clear small color="blue" icon-start (click)="goToMapa(banheiro)">
+					<ion-icon name='navigate'></ion-icon>
+					Ver no mapa
+				</button>
+	   		</ion-col>
+	   	
+	   		<ion-col text-right no-padding>
+				<button ion-button no-padding clear small color="blue" icon-start (click)="goToAvaliar(banheiro)">
+					<ion-icon name='star'></ion-icon>
+					Avaliar
+				</button>
+	   		</ion-col>
+	   	</ion-row>
+	   	
+	  </ion-card-content>
+	</ion-card>
+</ion-content>

@@ -10,7 +10,8 @@
 
 
 <ion-content padding>
-	<div #mapaCriarBanheiro id="mapaCriarBanheiro"></div>
+	<div id="mapaCriarBanheiro"></div>
+	<p>{{endereco}}</p>
 	
 	<form [formGroup]="criarBanheiroForm" (submit)="criarBanheiro()">
 		<ion-item>
@@ -18,8 +19,14 @@
 			<ion-input formControlName="nome" type="text" ></ion-input>
 		</ion-item>
 		
+		<ion-item id="comentario">
+			<ion-label floating>Comentário</ion-label>
+			<ion-textarea formControlName="comentario" type="text" ></ion-textarea>
+		</ion-item>
+		
+		<star-rating-comp formControlName="estrelas" [starType]="'svg'" [size]="'large'" [space]="'around'" [rating]="0"></star-rating-comp>
+		
 		<button type="submit" id="criarBanheiroButton" ion-button full [disabled]="!criarBanheiroForm.valid">Criar Banheiro</button>
 	</form>
 	
-	<!-- <button ion-button (click)="testar()">teste</button> -->
 </ion-content>

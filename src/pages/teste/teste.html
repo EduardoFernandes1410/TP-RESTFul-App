@@ -1,0 +1,16 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>teste</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ul>
+		<li *ngFor="let banheiro of banheiros | async">
+			{{banheiro | json}}
+		</li>
+	</ul>
+</ion-content>

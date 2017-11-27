@@ -1,18 +1,24 @@
 import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
 import { GoogleMaps, GoogleMap, GoogleMapOptions, GoogleMapsEvent, CameraPosition, MarkerOptions, Marker } from '@ionic-native/google-maps';
+import { HTTP } from '@ionic-native/http';
 import { BanheirosProvider } from '../banheiros/banheiros';
-import { FirebaseListObservable } from "angularfire2";
+import { RatesProvider } from '../rates/rates';
 
 @Injectable()
 export class MapsProvider {
-
-  constructor( private googleMaps: GoogleMaps, private banheirosProvider: BanheirosProvider ) {
-  }
-  
-  banheiros = this.banheirosProvider.getBanheiros()
+  private banheiros;
   map: GoogleMap[] = new Array<GoogleMap>();
-  
+
+  constructor(
+    private googleMaps: GoogleMaps,
+    private banheirosProvider: BanheirosProvider,
+    private ratesProvider: RatesProvider,
+    private http: HTTP
+  ) {
+    this.banheiros = this.banheirosProvider.getBanheiros();
+  }
+    
   // Carrega mapa na tela
   public loadMap(location: any, div: string): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -52,15 +58,33 @@ export class MapsProvider {
         
   
   //Adiciona marcadores dos banheiros
-  public showBanheirosOnMap(div: string): void {
-  	this.banheiros.forEach((elem) => {
-      this.map[div].addMarker({
-        title: elem.name,
-        draggable: false,
-        position: {
-          lat: elem.lat,
-          lng: elem.lng
-        }
+  public showBanheirosOnMap(div: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+    	this.banheiros.forEach((elem) => {
+        elem.forEach((banheiro) => {
+          this.ratesProvider.bathroomAvgRate(banheiro.key).then((data) => {
+            this.map[div].addMarker({
+              title: banheiro.nome,
+              snippet:  "Nota: " + data.toFixed(1) + '\n' + banheiro.comentario + '\n\n' + "Clique para avaliar",
+              draggable: false,
+              position: {
+                lat: banheiro.lat,
+                lng: banheiro.lng
+              },
+              icon: {
+                url: "./assets/imgs/poop.png",
+                size: {
+                  height: 35,
+                  width: 35
+                }
+              }
+            }).then((marcador) => {
+              marcador.on(GoogleMapsEvent.INFO_CLICK).subscribe(() => {
+                resolve(banheiro);
+              });
+            });
+          });
+        })
       });
     });
   }
@@ -68,7 +92,7 @@ export class MapsProvider {
   // Adiciona marcador ao mapa
   public adicionarMarcador(div: string, location: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.map[div].addMarker({
+      let marcador = this.map[div].addMarker({
         animation: 'DROP',
         position: {
           lat: location.lat,
@@ -87,8 +111,29 @@ export class MapsProvider {
         lat: location.lat,
         lng: location.lng
       },
-      zoom: 18,
+      zoom: 17,
       duration: 500
     });
+  }
+  
+  // Pegar endereco pelas coordenadas
+  public getAddress(location: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let data = {
+        latlng: location.lat + "," + location.lng,
+        key: "AIzaSyC6u9oRW_qMy4A32mwRCke4CQfwMc72qjQ"
+      };
+      
+      let url = "https://maps.googleapis.com/maps/api/geocode/json";
+      
+      this.http.get(url, data, {}).then((data) => {
+        let response = JSON.parse(data.data);
+        // Resolve
+        resolve(response["results"][0]["formatted_address"]);
+      }).catch((error) => {
+        reject();
+      });
+    });
+    
   }
 }

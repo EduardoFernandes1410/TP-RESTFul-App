@@ -14,7 +14,9 @@ export class MyApp {
 
   constructor(private admobFree: AdMobFree, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
-      statusBar.styleDefault();
+      // statusBar.styleDefault();
+      statusBar.styleLightContent();
+      statusBar.backgroundColorByHexString('#795548');
       splashScreen.hide();
       
       this.showAdMobBannerAds();

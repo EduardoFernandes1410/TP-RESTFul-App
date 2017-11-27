@@ -1,0 +1,29 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Informações do banheiro</ion-title>
+    
+    <ion-buttons end>
+    	<button ion-button color="danger" (click)="dismiss()">Voltar</button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<h2>{{banheiro.nome}}</h2>
+	<h5 id="comentario">"{{banheiro.comentario}}"</h5>
+	<p><ion-icon name="pin"></ion-icon>{{banheiro.endereco}}</p>
+	
+	<h5>Nota atual:</h5>
+	<star-rating-comp [readOnly]="true" [showHalfStars]="true" [starType]="'svg'" [size]="'large'" [space]="'around'" [rating]="nota"></star-rating-comp>
+	
+	<!-- Form -->
+	<form [formGroup]="banheiroForm" (submit)="adicionarNota()">
+		<h5 id="nota-h5">Dê a sua nota:</h5>
+		<star-rating-comp formControlName="estrelas" [starType]="'svg'" [size]="'large'" [space]="'around'" [rating]="0"></star-rating-comp>
+		
+		<button type="submit" id="botao" ion-button full [disabled]="!banheiroForm.valid">Enviar Avaliação</button>
+	</form>
+</ion-content>
